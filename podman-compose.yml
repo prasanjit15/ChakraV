@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  db:
+    image: docker.io/library/postgres:15
+    container_name: chakrav-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chakrav
+    ports:
+      - "5432:5432"
+    networks:
+      - chakrav-net
+
+  app:
+    build: .
+    container_name: chakrav-app
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chakrav
+      POSTGRES_HOST: db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - chakrav-net
+
+networks:
+  chakrav-net:
+    driver: bridge
